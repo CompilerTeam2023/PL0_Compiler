@@ -1,0 +1,11 @@
+    5 var   a lev=1 addr=3
+    6 var   b lev=1 addr=4
+    7 var   c lev=1 addr=5
+    6 var   d lev=1 addr=3
+    7 var   e lev=1 addr=4
+    8 var   f lev=1 addr=5
+    1 var   x lev=0 addr=3
+    2 var   y lev=0 addr=4
+    3 var   z lev=0 addr=5
+    4 proc  test lev=0 addr=2 size=6
+    5 proc  divide lev=0 addr=13 size=6
