@@ -1,10 +1,10 @@
 /**
- *¡¡¡¡CÓïÑÔ°æ±¾ÖĞ²ÉÓÃÈ«¾Ö±äÁ¿symÀ´´æ´¢·ûºÅÂë£¬²¢ÓÃÈ«¾Ö±äÁ¿idºÍnumÀ´´«µİÓïÒåÖµ¡£
- *±¾°æ±¾ÖĞ°ÑÕâÈıÕß·â×°ÆğÀ´£¬Í¬Ê±Ò²°Ñ·ûºÅÂëÒÔ³£ÊıµÄĞÎÊ½·â×°ÆğÀ´¡£
+ *ã€€ã€€Cè¯­è¨€ç‰ˆæœ¬ä¸­é‡‡ç”¨å…¨å±€å˜é‡symæ¥å­˜å‚¨ç¬¦å·ç ï¼Œå¹¶ç”¨å…¨å±€å˜é‡idå’Œnumæ¥ä¼ é€’è¯­ä¹‰å€¼ã€‚
+ *æœ¬ç‰ˆæœ¬ä¸­æŠŠè¿™ä¸‰è€…å°è£…èµ·æ¥ï¼ŒåŒæ—¶ä¹ŸæŠŠç¬¦å·ç ä»¥å¸¸æ•°çš„å½¢å¼å°è£…èµ·æ¥ã€‚
  *
  */
 public class Symbol {
-	// ¸÷Àà·ûºÅÂë
+	// å„ç±»ç¬¦å·ç 
 	public static final int nul 		= 0;
 	public static final int ident 		= 1;
 	public static final int number 		= 2;
@@ -12,7 +12,8 @@ public class Symbol {
 	public static final int minus 		= 4;
 	public static final int times 		= 5;
 	public static final int slash 		= 6;
-	public static final int oddsym 		= 7;
+	public static final int progsym     = 7;
+	// public static final int aster 		= 7;
 	public static final int eql 		= 8;
 	public static final int neq 		= 9;
 	public static final int lss 		= 10;
@@ -23,42 +24,43 @@ public class Symbol {
 	public static final int rparen 		= 15;
 	public static final int comma 		= 16;
 	public static final int semicolon 	= 17;
-	public static final int period 		= 18;
-	public static final int becomes 	= 19;
-	public static final int beginsym 	= 20;
-	public static final int endsym 		= 21;
-	public static final int ifsym 		= 22;
-	public static final int thensym 	= 23;
-	public static final int whilesym 	= 24;
-	public static final int writesym 	= 25;
-	public static final int readsym 	= 26;
-	public static final int dosym 		= 27;
-	public static final int callsym 	= 28;
-	public static final int constsym 	= 29;
-	public static final int varsym 		= 30;
-	public static final int procsym 	= 31;
+	// public static final int period 		= 18;
+	public static final int becomes 	= 18;
+	public static final int beginsym 	= 19;
+	public static final int endsym 		= 20;
+	public static final int ifsym 		= 21;
+	public static final int thensym 	= 22;
+	public static final int whilesym 	= 23;
+	// public static final int writesym 	= 25;
+	// public static final int readsym 	= 26;
+	public static final int dosym 		= 24;
+	// public static final int callsym 	= 28;
+	public static final int constsym 	= 25;
+	public static final int varsym 		= 26;
+	// public static final int procsym 	= 31;
 
-	// ·ûºÅÂëµÄ¸öÊı
-	public static final int symnum = 32;
+	// ç¬¦å·ç çš„ä¸ªæ•°
+	// public static final int symnum = 32;	
+	public static final int symnum = 27;
 	
 	/**
-	 * ·ûºÅÂë
+	 * ç¬¦å·ç 
 	 */
 	public int symtype;
 
 	/**
-	 * ±êÊ¶·ûÃû×Ö£¨Èç¹ûÕâ¸ö·ûºÅÊÇ±êÊ¶·ûµÄ»°£©
+	 * æ ‡è¯†ç¬¦åå­—ï¼ˆå¦‚æœè¿™ä¸ªç¬¦å·æ˜¯æ ‡è¯†ç¬¦çš„è¯ï¼‰
 	 */
 	public String id;
 
 	/**
-	 * ÊıÖµ´óĞ¡£¨Èç¹ûÕâ¸ö·ûºÅÊÇÊı×ÖµÄ»°£©
+	 * æ•°å€¼å¤§å°ï¼ˆå¦‚æœè¿™ä¸ªç¬¦å·æ˜¯æ•°å­—çš„è¯ï¼‰
 	 */
 	public int num;
 
 	/**
-	 * ¹¹Ôì¾ßÓĞÌØ¶¨·ûºÅÂëµÄ·ûºÅ
-	 * @param stype ·ûºÅÂë
+	 * æ„é€ å…·æœ‰ç‰¹å®šç¬¦å·ç çš„ç¬¦å·
+	 * @param stype ç¬¦å·ç 
 	 */
 	Symbol(int stype) {
 		symtype = stype;

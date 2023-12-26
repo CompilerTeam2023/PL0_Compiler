@@ -14,7 +14,7 @@ public class PL0 {
 	public static final int cxmax = 500;		// 最多的虚拟机代码数
 	public static final int levmax = 3;			// 最大允许过程嵌套声明层数 [0, levmax]
 	public static final int nmax = 14;			// number的最大位数
-	public static final int norw = 32;			// 关键字个数
+	public static final int norw = 9;			// 关键字个数
 	public static final int txmax = 100;		// 名字表容量
 	
 	// 一些全局变量，其他关键的变量分布如下：

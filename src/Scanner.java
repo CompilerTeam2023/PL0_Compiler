@@ -1,5 +1,7 @@
 import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 
 /**
  *　　词法分析器负责的工作是从源代码里面读取文法符号，这是PL/0编译器的主要组成部分之一。
@@ -29,7 +31,7 @@ public class Scanner {
 	/**
 	 * 当前读入的符号
 	 */
-	public Symbol sym;
+	public Symbol sym = new Symbol(Symbol.nul);
 	
 	/**
 	 * 保留字列表（注意保留字的存放顺序）
@@ -67,29 +69,32 @@ public class Scanner {
 		ssym[')'] = Symbol.rparen;
 		ssym['='] = Symbol.eql;
 		ssym[','] = Symbol.comma;
-		ssym['.'] = Symbol.period;
-		ssym['#'] = Symbol.neq;
+		// ssym['.'] = Symbol.period;
+		// ssym['#'] = Symbol.neq;
 		ssym[';'] = Symbol.semicolon;
 		
 		// 设置保留字名字,按照字母顺序，便于折半查找
-		word = new String[] {"begin", "call", "const", "do", "end", "if",
-			"odd", "procedure", "read", "then", "var", "while", "write"};
+		// word = new String[] {"begin", "call", "const", "do", "end", "if",
+		// 	"odd", "procedure", "read", "then", "var", "while", "write"};
+		word = new String[] {"BEGIN", "CONST", "DO", "END", "IF",
+			"PROGRAM", "THEN", "VAR", "WHILE"};
 		
 		// 设置保留字符号
 		wsym = new int[PL0.norw];
 		wsym[0] = Symbol.beginsym;
-		wsym[1] = Symbol.callsym;
-		wsym[2] = Symbol.constsym;
-		wsym[3] = Symbol.dosym;
-		wsym[4] = Symbol.endsym;
-		wsym[5] = Symbol.ifsym;
-		wsym[6] = Symbol.oddsym;
-		wsym[7] = Symbol.procsym;
-		wsym[8] = Symbol.readsym;
-		wsym[9] = Symbol.thensym;
-		wsym[10] = Symbol.varsym;
-		wsym[11] = Symbol.whilesym;
-		wsym[12] = Symbol.writesym;
+		// wsym[1] = Symbol.callsym;
+		wsym[1] = Symbol.constsym;
+		wsym[2] = Symbol.dosym;
+		wsym[3] = Symbol.endsym;
+		wsym[4] = Symbol.ifsym;
+		// wsym[6] = Symbol.oddsym;
+		// wsym[7] = Symbol.procsym;
+		wsym[5] = Symbol.progsym;
+		// wsym[8] = Symbol.readsym;
+		wsym[6] = Symbol.thensym;
+		wsym[7] = Symbol.varsym;
+		wsym[8] = Symbol.whilesym;
+		// wsym[12] = Symbol.writesym;
 	}
 	
 	/**
@@ -100,12 +105,12 @@ public class Scanner {
 		try {
 			if (cc == ll) {
 				while (l.equals(""))
-					l = in.readLine().toLowerCase() + "\n";
+					l = in.readLine() + "\n";
 				ll = l.length();
 				cc = 0;
 				line = l.toCharArray();
-				System.out.println(PL0.interp.cx + " " + l);
-				PL0.fa1.println(PL0.interp.cx + " " + l);
+				// System.out.println(PL0.interp.cx + " " + l);
+				// PL0.fa1.println(PL0.interp.cx + " " + l);
 			}
 		} catch (IOException e) {
 			throw new Error("program imcomplete");
@@ -122,7 +127,7 @@ public class Scanner {
 		// 但是你的助教认为下面的写法能够更加清楚地看出这个函数的处理逻辑
 		while (Character.isWhitespace(ch))		// 跳过所有空白字符
 			getch();
-		if (ch >= 'a' && ch <= 'z') {
+		if (ch >= 'a' && ch <= 'z' || ch >= 'A' && ch <= 'Z') {
 			// 关键字或者一般标识符
 			matchKeywordOrIdentifier();
 		} else if (ch >= '0' && ch <= '9') {
@@ -144,7 +149,7 @@ public class Scanner {
 		do {
 			sb.append(ch);
 			getch();
-		} while (ch >= 'a' && ch <= 'z' || ch >= '0' && ch <= '9');
+		} while (ch >= 'a' && ch <= 'z' || ch >= 'A' && ch <= 'Z' || ch >= '0' && ch <= '9');
 		String id = sb.toString();
 		
 		// 然后搜索是不是保留字（请注意使用的是什么搜索方法）
@@ -198,7 +203,12 @@ public class Scanner {
 			if (ch == '=') {
 				sym = new Symbol(Symbol.leq);
 				getch();
-			} else {
+			}
+			else if(ch == '>'){
+				sym = new Symbol(Symbol.neq);
+				getch();;
+			}
+			else {
 				sym = new Symbol(Symbol.lss);
 			}
 			break;
@@ -213,9 +223,35 @@ public class Scanner {
 			break;
 		default:		// 其他为单字符操作符（如果符号非法则返回nil）
 			sym = new Symbol(ssym[ch]);
-			if (sym.symtype != Symbol.period)
-				getch();
+			// if (sym.symtype != Symbol.period)
+			// 	getch();
+			getch();
 			break;
 		}
 	}	
+
+	// test scanner
+	public static void main(String[] args){
+		String fname = "";
+		BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
+		BufferedReader fin;
+		try{
+			fname = "test.pl0";
+			System.out.print("Input pl/0 file?   ");
+			while (fname.equals(""))
+				fname = stdin.readLine();
+			fin = new BufferedReader(new FileReader(fname));
+
+			// test procedure
+			Scanner testScanner = new Scanner(fin);
+			while (testScanner.sym.symtype != Symbol.endsym) {
+				testScanner.getsym();
+				System.out.println(testScanner.sym.symtype);
+			}
+		}
+		catch (IOException e) {
+			System.out.println("Can't open file!");
+		}
+
+	}
 }
