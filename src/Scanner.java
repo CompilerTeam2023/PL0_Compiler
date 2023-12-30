@@ -192,7 +192,7 @@ public class Scanner {
 			case ':': // 赋值符号
 				getch();
 				if (ch == '=') {
-					sym = new Symbol(Symbol.becomes);
+					sym = new Symbol(Symbol.assign);
 					getch();
 				} else {
 					// 不能识别的符号
@@ -204,7 +204,7 @@ public class Scanner {
 				if (ch == '=') {
 					sym = new Symbol(Symbol.leq);
 					getch();
-				} else if (ch == '>') {
+				} else if (ch == '>') {  //不等于
 					sym = new Symbol(Symbol.neq);
 					getch();
 					;
