@@ -1,3 +1,4 @@
+import java.sql.SQLOutput;
 import java.util.BitSet;
 
 /**
@@ -76,6 +77,7 @@ public class Parser {
      */
     public void parse() {
         program();
+        table.printTable();
     }
 
     /**
@@ -165,6 +167,7 @@ public class Parser {
 
         // P (constDefinition)
         if(symtype==Symbol.ident){
+            table.addItem(sym.id,Table.constant);
             constDefinition();
         }
         else{
@@ -175,6 +178,7 @@ public class Parser {
             nextsym();
             // P (constDefinition)
             if(symtype==Symbol.ident){
+                table.addItem(sym.id,Table.constant);
                 constDefinition();
             }
             else{
@@ -230,6 +234,7 @@ public class Parser {
 
         // P (identifier)
         if (symtype == Symbol.ident) {
+            table.addItem(sym.id,Table.variable);
             nextsym();
         } else {
             System.out.println("error: varDeclaration-identifier");
@@ -239,6 +244,7 @@ public class Parser {
             nextsym();
             // P (identifier)
             if(symtype==Symbol.ident){
+                table.addItem(sym.id,Table.variable);
                 nextsym();
             }
             else{
@@ -345,7 +351,7 @@ public class Parser {
         }
 
         //P(expression)
-        if (symtype == Symbol.plus || symtype == Symbol.minus){
+        if (symtype == Symbol.plus || symtype == Symbol.minus|| symtype == Symbol.ident|| symtype == Symbol.number|| symtype==Symbol.lparen){
             expression();
         }
         else{
@@ -458,7 +464,7 @@ public class Parser {
         }
 
         //P(+/-)
-        if(symtype == Symbol.plus || symtype == Symbol.minus){
+        if(symtype == Symbol.plus || symtype == Symbol.minus|| symtype == Symbol.ident|| symtype == Symbol.number|| symtype==Symbol.lparen){
             condition();
         }
         else{
@@ -488,7 +494,7 @@ public class Parser {
      */
     private void condition() {
         //P(expression)
-        if (symtype == Symbol.plus || symtype == Symbol.minus){
+        if (symtype == Symbol.plus || symtype == Symbol.minus|| symtype == Symbol.ident|| symtype == Symbol.number|| symtype==Symbol.lparen){
             expression();
         }
         else{
@@ -504,7 +510,7 @@ public class Parser {
         }
 
         //P(expression)
-        if (symtype == Symbol.plus || symtype == Symbol.minus){
+        if (symtype == Symbol.plus || symtype == Symbol.minus|| symtype == Symbol.ident|| symtype == Symbol.number|| symtype==Symbol.lparen){
             expression();
         }
         else{
@@ -526,7 +532,7 @@ public class Parser {
         }
 
         //P(+/-)
-        if(symtype == Symbol.plus || symtype == Symbol.minus){
+        if(symtype == Symbol.plus || symtype == Symbol.minus|| symtype == Symbol.ident|| symtype == Symbol.number|| symtype==Symbol.lparen){
             condition();
         }
         else{

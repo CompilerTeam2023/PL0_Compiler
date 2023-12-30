@@ -85,7 +85,7 @@ public class PL0 {
 	 */
 	public static void main(String[] args) {
 		// 原来 C 语言版的一些语句划分到compile()和Parser.parse()中
-		String fname = "test_lev.pl0";
+		String fname = "test.pl0";
 		BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
 		BufferedReader fin;
 		try {
@@ -97,7 +97,7 @@ public class PL0 {
 			fin = new BufferedReader(new FileReader(fname));
 
 			// 是否输出虚拟机代码
-			fname = "y";
+			fname = "n";
 			// System.out.print("List object code?(Y/N)");
 			// while (fname.equals(""))
 			// fname = stdin.readLine();
@@ -119,7 +119,7 @@ public class PL0 {
 			if (pl0.compile()) {
 				// 如果成功编译则接着解释运行
 				PL0.fa2 = new PrintStream("fa2.tmp");
-				interp.interpret();
+//				interp.interpret();
 				PL0.fa2.close();
 			} else {
 				System.out.print("Errors in pl/0 program");
