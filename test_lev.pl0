@@ -1,0 +1,14 @@
+PROGRAM add
+VAR x,y;
+BEGIN
+  x:=1;
+  y:=2;
+  WHILE x<5 DO 
+  BEGIN
+  x:=x+2;
+  WHILE x>0 DO 
+  x:=x+1;
+  END
+  IF y>0 THEN y:=y-1;
+  y:=y+x
+END

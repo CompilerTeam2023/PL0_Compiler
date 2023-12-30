@@ -1,39 +1,39 @@
 /**
- *¡¡¡¡Õâ¸öÀà·â×°ÁËPL/0±àÒëÆ÷µÄ·ûºÅ±í£¬CÓïÑÔ°æ±¾ÖÐ¹Ø¼üµÄÈ«¾Ö±äÁ¿txºÍtable[]¾ÍÔÚÕâÀï¡£
+ *ã€€ã€€è¿™ä¸ªç±»å°è£…äº†PL/0ç¼–è¯‘å™¨çš„ç¬¦å·è¡¨ï¼ŒCè¯­è¨€ç‰ˆæœ¬ä¸­å…³é”®çš„å…¨å±€å˜é‡txå’Œtable[]å°±åœ¨è¿™é‡Œã€‚
  */
 public class Table {
 	/**
-	 *¡¡¡¡¼´CÓïÑÔ°æ±¾ÖÐµÄtablestruct½á¹¹¡£
+	 *ã€€ã€€å³Cè¯­è¨€ç‰ˆæœ¬ä¸­çš„tablestructç»“æž„ã€‚
 	 */
 	public class Item {
-		// ÕâÀï¶¨ÒåÃû×Ö±íÖÐµÄÀàÐÍ£¬¶ÔÓ¦CÓïÑÔ°æµÄobjectÃ¶¾ÙÀàÐÍ
+		// è¿™é‡Œå®šä¹‰åå­—è¡¨ä¸­çš„ç±»åž‹ï¼Œå¯¹åº”Cè¯­è¨€ç‰ˆçš„objectæžšä¸¾ç±»åž‹
 		public static final int constant = 0;
 		public static final int variable = 1;
 		public static final int procedur = 2;
 		
-		String name;		// Ãû×Ö
-		int kind;			// ÀàÐÍ£ºconst, var or procedur
-		int val;			// ÊýÖµ£¬½öconstÊ¹ÓÃ
-		int level;			// Ëù´¦²ã£¬varºÍprocedurÊ¹ÓÃ
-		int adr;			// µØÖ·£¬varºÍprocedurÊ¹ÓÃ
-		int size;			// ÐèÒª·ÖÅäµÄÊý¾ÝÇø¿Õ¼ä, ½öprocedureÊ¹ÓÃ
+		String name;		// åå­—
+		int kind;			// ç±»åž‹ï¼šconst, var or procedur
+		int val;			// æ•°å€¼ï¼Œä»…constä½¿ç”¨
+		int level;			// æ‰€å¤„å±‚ï¼Œvarå’Œprocedurä½¿ç”¨
+		int adr;			// åœ°å€ï¼Œvarå’Œprocedurä½¿ç”¨
+		int size;			// éœ€è¦åˆ†é…çš„æ•°æ®åŒºç©ºé—´, ä»…procedureä½¿ç”¨
 	}
 	
 	/**
-	 * Ãû×Ö±í£¬ÇëÊ¹ÓÃget()º¯Êý·ÃÎÊ
+	 * åå­—è¡¨ï¼Œè¯·ä½¿ç”¨get()å‡½æ•°è®¿é—®
 	 * @see #get(int)
 	 */
 	private Item[] table = new Item[PL0.txmax];
 	
 	/**
-	 * µ±Ç°Ãû×Ö±íÏîÖ¸Õë£¬Ò²¿ÉÒÔÀí½âÎªµ±Ç°ÓÐÐ§µÄÃû×Ö±í´óÐ¡£¨table size£©
+	 * å½“å‰åå­—è¡¨é¡¹æŒ‡é’ˆï¼Œä¹Ÿå¯ä»¥ç†è§£ä¸ºå½“å‰æœ‰æ•ˆçš„åå­—è¡¨å¤§å°ï¼ˆtable sizeï¼‰
 	 */
 	public int tx = 0;
 	
 	/**
-	 * »ñµÃÃû×Ö±íÄ³Ò»ÏîµÄÄÚÈÝ
-	 * @param i Ãû×Ö±íÖÐµÄÎ»ÖÃ
-	 * @return Ãû×Ö±íµÚ i ÏîµÄÄÚÈÝ
+	 * èŽ·å¾—åå­—è¡¨æŸä¸€é¡¹çš„å†…å®¹
+	 * @param i åå­—è¡¨ä¸­çš„ä½ç½®
+	 * @return åå­—è¡¨ç¬¬ i é¡¹çš„å†…å®¹
 	 */
 	public Item get(int i) {
 		if (table[i] == null) {
@@ -44,11 +44,11 @@ public class Table {
 	}
 	
 	/**
-	 * °ÑÄ³¸ö·ûºÅµÇÂ½µ½Ãû×Ö±íÖÐ£¬×¢Òâ²ÎÊý¸úCÓïÑÔ°æ±¾²»Í¬
-	 * @param sym ÒªµÇÂ½µ½Ãû×Ö±íµÄ·ûºÅ
-	 * @param k   ¸Ã·ûºÅµÄÀàÐÍ£ºconst, var, procedure
-	 * @param lev Ãû×ÖËùÔÚµÄ²ã´Î
-	 * @param dx  µ±Ç°Ó¦·ÖÅäµÄ±äÁ¿µÄÏà¶ÔµØÖ·£¬×¢Òâµ÷ÓÃenter()ºódxÒª¼ÓÒ»
+	 * æŠŠæŸä¸ªç¬¦å·ç™»é™†åˆ°åå­—è¡¨ä¸­ï¼Œæ³¨æ„å‚æ•°è·ŸCè¯­è¨€ç‰ˆæœ¬ä¸åŒ
+	 * @param sym è¦ç™»é™†åˆ°åå­—è¡¨çš„ç¬¦å·
+	 * @param k   è¯¥ç¬¦å·çš„ç±»åž‹ï¼šconst, var, procedure
+	 * @param lev åå­—æ‰€åœ¨çš„å±‚æ¬¡
+	 * @param dx  å½“å‰åº”åˆ†é…çš„å˜é‡çš„ç›¸å¯¹åœ°å€ï¼Œæ³¨æ„è°ƒç”¨enter()åŽdxè¦åŠ ä¸€
 	 */
 	public void enter(Symbol sym, int k, int lev, int dx) {
 		tx ++;
@@ -56,27 +56,27 @@ public class Table {
 		item.name = sym.id;
 		item.kind = k;
 		switch (k) {
-		case Item.constant:				// ³£Á¿Ãû×Ö
+		case Item.constant:				// å¸¸é‡åå­—
 			if (sym.num > PL0.amax) {
-				Err.report(31);		// Êý×Ö¹ý´óÒç³ö
+				Err.report(31);		// æ•°å­—è¿‡å¤§æº¢å‡º
 				item.val = 0;
 			} else {
 				item.val = sym.num;
 			}
 			break;
-		case Item.variable:				// ±äÁ¿Ãû×Ö 
+		case Item.variable:				// å˜é‡åå­— 
 			item.level = lev;
 			item.adr = dx;
 			break;
-		case Item.procedur:				// ¹ý³ÌÃû×Ö
+		case Item.procedur:				// è¿‡ç¨‹åå­—
 			item.level = lev;
 			break;
 		}
 	}
 	
 	/**
-	 * ´òÓ¡·ûºÅ±íÄÚÈÝ£¬Õª×ÔCÓïÑÔ°æ±¾µÄ block() º¯Êý¡£
-	 * @param start µ±Ç°×÷ÓÃÓò·ûºÅ±íÇø¼äµÄ×ó¶Ë
+	 * æ‰“å°ç¬¦å·è¡¨å†…å®¹ï¼Œæ‘˜è‡ªCè¯­è¨€ç‰ˆæœ¬çš„ block() å‡½æ•°ã€‚
+	 * @param start å½“å‰ä½œç”¨åŸŸç¬¦å·è¡¨åŒºé—´çš„å·¦ç«¯
 	 */
 	public void debugTable(int start) {
 		if (!PL0.tableswitch)
@@ -104,9 +104,9 @@ public class Table {
 	}
 
 	/**
-	 * ÔÚÃû×Ö±íÖÐ²éÕÒÄ³¸öÃû×ÖµÄÎ»ÖÃ
-	 * @param idt Òª²éÕÒµÄÃû×Ö
-	 * @return Èç¹ûÕÒµ½Ôò·µ»ØÃû×ÖÏîµÄÏÂ±ê£¬·ñÔò·µ»Ø0
+	 * åœ¨åå­—è¡¨ä¸­æŸ¥æ‰¾æŸä¸ªåå­—çš„ä½ç½®
+	 * @param idt è¦æŸ¥æ‰¾çš„åå­—
+	 * @return å¦‚æžœæ‰¾åˆ°åˆ™è¿”å›žåå­—é¡¹çš„ä¸‹æ ‡ï¼Œå¦åˆ™è¿”å›ž0
 	 */
 	public int position(String idt) {
 		for (int i = tx; i > 0; i--)

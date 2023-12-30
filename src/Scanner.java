@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 /**
- *　　词法分析器负责的工作是从源代码里面读取文法符号，这是PL/0编译器的主要组成部分之一。
+ * 词法分析器负责的工作是从源代码里面读取文法符号，这是PL/0编译器的主要组成部分之一。
  */
 
 public class Scanner {
@@ -12,37 +12,37 @@ public class Scanner {
 	 * 刚刚读入的字符
 	 */
 	private char ch = ' ';
-	
+
 	/**
 	 * 当前读入的行
 	 */
 	private char[] line;
-	
+
 	/**
 	 * 当前行的长度（line length）
 	 */
 	public int ll = 0;
-	
+
 	/**
 	 * 当前字符在当前行中的位置（character counter）
 	 */
 	public int cc = 0;
-	
+
 	/**
 	 * 当前读入的符号
 	 */
 	public Symbol sym = new Symbol(Symbol.nul);
-	
+
 	/**
 	 * 保留字列表（注意保留字的存放顺序）
 	 */
 	private String[] word;
-	
+
 	/**
 	 * 保留字对应的符号值
 	 */
 	private int[] wsym;
-	
+
 	/**
 	 * 单字符的符号值
 	 */
@@ -50,14 +50,15 @@ public class Scanner {
 
 	// 输入流
 	private BufferedReader in;
-	
+
 	/**
 	 * 初始化词法分析器
+	 * 
 	 * @param input PL/0 源文件输入流
 	 */
 	public Scanner(BufferedReader input) {
 		in = input;
-		
+
 		// 设置单字符符号
 		ssym = new int[256];
 		java.util.Arrays.fill(ssym, Symbol.nul);
@@ -72,13 +73,13 @@ public class Scanner {
 		// ssym['.'] = Symbol.period;
 		// ssym['#'] = Symbol.neq;
 		ssym[';'] = Symbol.semicolon;
-		
+
 		// 设置保留字名字,按照字母顺序，便于折半查找
 		// word = new String[] {"begin", "call", "const", "do", "end", "if",
-		// 	"odd", "procedure", "read", "then", "var", "while", "write"};
-		word = new String[] {"BEGIN", "CONST", "DO", "END", "IF",
-			"PROGRAM", "THEN", "VAR", "WHILE"};
-		
+		// "odd", "procedure", "read", "then", "var", "while", "write"};
+		word = new String[] { "BEGIN", "CONST", "DO", "END", "IF",
+				"PROGRAM", "THEN", "VAR", "WHILE" };
+
 		// 设置保留字符号
 		wsym = new int[PL0.norw];
 		wsym[0] = Symbol.beginsym;
@@ -96,7 +97,7 @@ public class Scanner {
 		wsym[8] = Symbol.whilesym;
 		// wsym[12] = Symbol.writesym;
 	}
-	
+
 	/**
 	 * 读取一个字符，为减少磁盘I/O次数，每次读取一行
 	 */
@@ -116,16 +117,16 @@ public class Scanner {
 			throw new Error("program imcomplete");
 		}
 		ch = line[cc];
-		cc ++;
+		cc++;
 	}
-	
+
 	/**
 	 * 词法分析，获取一个词法符号，是词法分析器的重点
 	 */
 	public void getsym() {
 		// Wirth 的 PL/0 编译器使用一系列的if...else...来处理
 		// 但是你的助教认为下面的写法能够更加清楚地看出这个函数的处理逻辑
-		while (Character.isWhitespace(ch))		// 跳过所有空白字符
+		while (Character.isWhitespace(ch)) // 跳过所有空白字符
 			getch();
 		if (ch >= 'a' && ch <= 'z' || ch >= 'A' && ch <= 'Z') {
 			// 关键字或者一般标识符
@@ -138,7 +139,7 @@ public class Scanner {
 			matchOperator();
 		}
 	}
-	
+
 	/**
 	 * 分析关键字或者一般标识符
 	 */
@@ -151,10 +152,10 @@ public class Scanner {
 			getch();
 		} while (ch >= 'a' && ch <= 'z' || ch >= 'A' && ch <= 'Z' || ch >= '0' && ch <= '9');
 		String id = sb.toString();
-		
+
 		// 然后搜索是不是保留字（请注意使用的是什么搜索方法）
 		i = java.util.Arrays.binarySearch(word, id);
-		
+
 		// 最后形成符号信息
 		if (i < 0) {
 			// 一般标识符
@@ -165,7 +166,7 @@ public class Scanner {
 			sym = new Symbol(wsym[i]);
 		}
 	}
-	
+
 	/**
 	 * 分析数字
 	 */
@@ -173,69 +174,68 @@ public class Scanner {
 		int k = 0;
 		sym = new Symbol(Symbol.number);
 		do {
-			sym.num = 10*sym.num + Character.digit(ch, 10);
+			sym.num = 10 * sym.num + Character.digit(ch, 10);
 			k++;
 			getch();
-		} while (ch>='0' && ch<='9'); 				// 获取数字的值
+		} while (ch >= '0' && ch <= '9'); // 获取数字的值
 		k--;
 		if (k > PL0.nmax)
 			Err.report(30);
 	}
-	
+
 	/**
 	 * 分析操作符
 	 */
 	void matchOperator() {
 		// 请注意这里的写法跟Wirth的有点不同
 		switch (ch) {
-		case ':':		// 赋值符号
-			getch();
-			if (ch == '=') {
-				sym = new Symbol(Symbol.becomes);
+			case ':': // 赋值符号
 				getch();
-			} else {
-				// 不能识别的符号
-				sym = new Symbol(Symbol.nul);
-			}
-			break;
-		case '<':		// 小于或者小于等于
-			getch();
-			if (ch == '=') {
-				sym = new Symbol(Symbol.leq);
+				if (ch == '=') {
+					sym = new Symbol(Symbol.becomes);
+					getch();
+				} else {
+					// 不能识别的符号
+					sym = new Symbol(Symbol.nul);
+				}
+				break;
+			case '<': // 小于或者小于等于
 				getch();
-			}
-			else if(ch == '>'){
-				sym = new Symbol(Symbol.neq);
-				getch();;
-			}
-			else {
-				sym = new Symbol(Symbol.lss);
-			}
-			break;
-		case '>':		// 大于或者大于等于
-			getch();
-			if (ch == '=') {
-				sym = new Symbol(Symbol.geq);
+				if (ch == '=') {
+					sym = new Symbol(Symbol.leq);
+					getch();
+				} else if (ch == '>') {
+					sym = new Symbol(Symbol.neq);
+					getch();
+					;
+				} else {
+					sym = new Symbol(Symbol.lss);
+				}
+				break;
+			case '>': // 大于或者大于等于
 				getch();
-			} else {
-				sym = new Symbol(Symbol.gtr);
-			}
-			break;
-		default:		// 其他为单字符操作符（如果符号非法则返回nil）
-			sym = new Symbol(ssym[ch]);
-			// if (sym.symtype != Symbol.period)
-			// 	getch();
-			getch();
-			break;
+				if (ch == '=') {
+					sym = new Symbol(Symbol.geq);
+					getch();
+				} else {
+					sym = new Symbol(Symbol.gtr);
+				}
+				break;
+			default: // 其他为单字符操作符（如果符号非法则返回nil）
+				sym = new Symbol(ssym[ch]);
+				// if (sym.symtype != Symbol.period)
+				// getch();
+				getch();
+				break;
 		}
-	}	
+	}
 
 	// test scanner
-	public static void main(String[] args){
+	public static void main(String[] args) {
 		String fname = "";
 		BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
 		BufferedReader fin;
-		try{
+		try {
 			fname = "test.pl0";
 			System.out.print("Input pl/0 file?   ");
 			while (fname.equals(""))
@@ -248,8 +248,7 @@ public class Scanner {
 				testScanner.getsym();
 				System.out.println(testScanner.sym.symtype);
 			}
-		}
-		catch (IOException e) {
+		} catch (IOException e) {
 			System.out.println("Can't open file!");
 		}
 
