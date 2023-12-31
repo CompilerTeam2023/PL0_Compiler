@@ -221,10 +221,8 @@ public class Scanner {
                     sym = new Symbol(Symbol.gtr);
                 }
                 break;
-            default: // 其他为单字符操作符（如果符号非法则返回nil）
+            default: // 其他为单字符操作符（如果符号非法则返回nul）
                 sym = new Symbol(ssym[ch]);
-                // if (sym.symtype != Symbol.period)
-                // getch();
                 getch();
                 break;
         }

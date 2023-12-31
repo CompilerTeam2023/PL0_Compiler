@@ -9,20 +9,8 @@ public class Intermediater {
     public int nextStat = initStat; // 下一条代码地址
     public int tempVarCounter = 0;// 中间代码临时变量
 
-    private ArrayList<Integer> trueList = new ArrayList<>(); // 真出口
-    private ArrayList<Integer> falseList = new ArrayList<>(); // 假出口
-    private ArrayList<Integer> nextList = new ArrayList<>(); // 下一块地址列表
-
-    public ArrayList<Integer> getNextList() {
-        return nextList;
-    }
-
-    public ArrayList<Integer> getTrueList() {
-        return trueList;
-    }
-
-    public ArrayList<Integer> getFalseList() {
-        return falseList;
+    public ArrayList<Integer> makeList() {
+        return new ArrayList<>();
     }
 
     public String newTempVar() {
