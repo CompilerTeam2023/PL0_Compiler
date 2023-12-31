@@ -2,6 +2,8 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 词法分析器负责的工作是从源代码里面读取文法符号，这是PL/0编译器的主要组成部分之一。
@@ -48,6 +50,11 @@ public class Scanner {
 	 */
 	private int[] ssym;
 
+	/**
+	 * 关系运算符map（= <> > < >= <=)
+	 */
+	private Map<Integer, String> operationMap = new HashMap<>();
+
 	// 输入流
 	private BufferedReader in;
 
@@ -70,9 +77,15 @@ public class Scanner {
 		ssym[')'] = Symbol.rparen;
 		ssym['='] = Symbol.eql;
 		ssym[','] = Symbol.comma;
-		// ssym['.'] = Symbol.period;
-		// ssym['#'] = Symbol.neq;
 		ssym[';'] = Symbol.semicolon;
+
+		// 关系运算符
+		operationMap.put(Symbol.eql, "=");
+		operationMap.put(Symbol.eql, "=");
+		operationMap.put(Symbol.eql, "=");
+		operationMap.put(Symbol.eql, "=");
+		operationMap.put(Symbol.eql, "=");
+		operationMap.put(Symbol.eql, "=");
 
 		// 设置保留字名字,按照字母顺序，便于折半查找
 		// word = new String[] {"begin", "call", "const", "do", "end", "if",
@@ -204,7 +217,7 @@ public class Scanner {
 				if (ch == '=') {
 					sym = new Symbol(Symbol.leq);
 					getch();
-				} else if (ch == '>') {  //不等于
+				} else if (ch == '>') { // 不等于
 					sym = new Symbol(Symbol.neq);
 					getch();
 					;
