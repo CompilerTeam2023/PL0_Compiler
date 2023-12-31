@@ -35,7 +35,7 @@ public class PL0 {
 	// 一个典型的编译器的组成部分
 	public static Scanner lex; // 词法分析器
 	public static Parser parser; // 语法分析器
-	public static Interpreter interp; // 类P-Code解释器（及目标代码生成工具）
+	public static Intermediater intermediater; // 中间代码生成工具
 	public static Table table; // 名字表
 
 	/**
@@ -46,9 +46,9 @@ public class PL0 {
 	public PL0(BufferedReader fin) {
 		// 各部件的构造函数中都含有C语言版本的 init() 函数的一部分代码
 		table = new Table();
-		interp = new Interpreter();
+		intermediater = new Intermediater();
 		lex = new Scanner(fin);
-		parser = new Parser(lex, table, interp);
+		parser = new Parser(lex, table, intermediater);
 	}
 
 	/**

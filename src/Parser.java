@@ -10,7 +10,7 @@ import java.util.Map;
 public class Parser {
 	private Scanner lex; // 对词法分析器的引用
 	private Table table; // 对符号表的引用
-	private Interpreter interp; // 对目标代码生成器的引用
+//	private Interpreter interp; // 对目标代码生成器的引用
 	private Intermediater intermediater; // 中间代码生成器
 	/**
 	 * 当前符号的符号码，由nextsym()读入
@@ -36,17 +36,16 @@ public class Parser {
 
 	private BitSet subprogram_first;
 	private BitSet statement_first;
-	// private BitSet operator;
 
 	/**
 	 * 关系运算符map（= <> > < >= <=)
 	 */
 	private Map<Integer, String> operationMap = new HashMap<>();
 
-	public Parser(Scanner l, Table t, Interpreter i) {
+	public Parser(Scanner l, Table t, Intermediater i) {
 		lex = l;
 		table = t;
-		interp = i;
+		intermediater = i;
 
 		// subprogram的first集合
 		subprogram_first = new BitSet(Symbol.symnum);
@@ -66,15 +65,6 @@ public class Parser {
 		statement_first.set(Symbol.beginsym);
 
 		// 关系运算符
-		// operator = new BitSet(Symbol.symnum);
-		// operator.set(Symbol.eql);
-		// operator.set(Symbol.neq);
-		// operator.set(Symbol.lss);
-		// operator.set(Symbol.leq);
-		// operator.set(Symbol.gtr);
-		// operator.set(Symbol.geq);
-
-		// 关系运算符
 		operationMap.put(Symbol.eql, "=");
 		operationMap.put(Symbol.neq, "<>");
 		operationMap.put(Symbol.gtr, ">");
@@ -91,7 +81,7 @@ public class Parser {
 	 */
 	public void parse() {
 		program();
-		table.printTable();
+//		table.printTable();
 	}
 
 	/**
@@ -315,7 +305,7 @@ public class Parser {
 	/**
 	 * 分析<语句>
 	 */
-	void statement() {
+	public void statement() {
 		switch (symtype) {
 			case Symbol.ident:
 				assignStatement();
@@ -342,7 +332,7 @@ public class Parser {
 	/**
 	 * 分析<赋值语句>
 	 */
-	private void assignStatement() {
+	public void assignStatement() {
 		String code = "", left = "", op = "", right = "";
 		// P(ident)
 		if (symtype == Symbol.ident) {
@@ -380,7 +370,7 @@ public class Parser {
 	/**
 	 * 分析<表达式>
 	 */
-	private String expression() {
+	public String expression() {
 		String code = "";
 		String temp1 = "", temp2 = "", temp = "";
 		String op = "";
@@ -430,7 +420,7 @@ public class Parser {
 	/**
 	 * 分析<项>
 	 */
-	private String term() {
+	public String term() {
 		String op = "";
 		String temp1 = "", temp2 = "", temp = "";
 		String code = "";
@@ -470,7 +460,7 @@ public class Parser {
 	/**
 	 * 分析<因子>
 	 */
-	private String factor() {
+	public String factor() {
 
 		String result = "";
 		// P(ident)
@@ -505,7 +495,7 @@ public class Parser {
 	 * 分析<条件语句>
 	 * Condition_statement -> IF Condition THEN (M1) Statement (M2)
 	 */
-	private void ifStatement() {
+	public void ifStatement() {
 		int M1, M2;
 		ArrayList<Integer> S1 = new ArrayList<>();
 		ArrayList<Integer> S = new ArrayList<>();
@@ -554,7 +544,7 @@ public class Parser {
 	/**
 	 * 分析<条件>
 	 */
-	private void condition() {
+	public void condition() {
 		String code = "", left = "", op = "", right = "";
 		intermediater.getTrueList().add(intermediater.nextStat); // 写死，真链一定在nextStat+2
 		intermediater.getFalseList().add(intermediater.nextStat + 1);
@@ -593,8 +583,9 @@ public class Parser {
 
 	/**
 	 * 分析<循环语句>
+	 * Loop_statement -> WHILE (M1)Condition DO (M2)Statement (M3)
 	 */
-	private void whileStatement() {
+	public void whileStatement() {
 		// P(while)
 		if (symtype == Symbol.whilesym) {
 			nextsym();
