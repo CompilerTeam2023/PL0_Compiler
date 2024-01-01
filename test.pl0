@@ -1,9 +1,9 @@
 PROGRAM add
 VAR x,y;
 BEGIN
+  x:=1;
   y:=2;
-  WHILE x<5 DO x:=x+1;
-  z:=1*(9-4)/6+3*6;
+  WHILE x<>5 DO y:=y-1;
   IF y>0 THEN y:=y-1;
-  y:=6+2
+  y:=y+x
 END

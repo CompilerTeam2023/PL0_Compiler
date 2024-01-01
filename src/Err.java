@@ -1,22 +1,18 @@
 /**
- *　　这个类只是包含了报错函数以及错误计数器。
- */
+ * @Description 错误处理类，输出错误信息并终止程序
+ * @Author fjy
+ * @Date 2024-01-02
+ **/
 public class Err {
-	/**
-	 * 错误计数器，编译过程中一共有多少个错误
-	 */
-	public static int err = 0;
-	
-	/**
-	 * 报错函数
-	 * @param errcode 错误码
-	 */
-	public static void report(int errcode) {
-		char[] s = new char[PL0.lex.cc-1];
-		java.util.Arrays.fill(s, ' ');
-		String space = new String(s);
-		System.out.println("****" + space + "!" + errcode);
-		PL0.fa1.println("****" + space + "!" + errcode);
-		err ++;
-	}
+
+    /**
+     * 报错函数
+     *
+     * @param errorMsg 错误信息
+     * @param line     所在行数
+     */
+    public static void handleError(String errorMsg, int line) {
+        System.out.println("Error at line " + line + ": " + errorMsg);
+        System.exit(0);
+    }
 }

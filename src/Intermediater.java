@@ -2,6 +2,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
+/**
+ * 【PL/0编译器的中间代码生成工具】
+ * 生成易读的三地址代码
+ */
 public class Intermediater {
     public ArrayList<String> IntermediateCode = new ArrayList<>();
 
@@ -37,7 +41,6 @@ public class Intermediater {
             }
         } catch (IOException e) {
             System.out.println("中间代码写入文件失败！");
-            e.printStackTrace();
         }
     }
 

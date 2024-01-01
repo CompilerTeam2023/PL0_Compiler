@@ -1,4 +1,6 @@
-
+/**
+ * 　　这个类封装了PL/0中的词法符号
+ */
 public class Symbol {
 
     // 标识符
@@ -22,7 +24,7 @@ public class Symbol {
     public static final int comma = 16;
     public static final int semicolon = 17;
     // 关键字
-	public static final int progsym = 18;
+    public static final int progsym = 18;
     public static final int beginsym = 19;
     public static final int endsym = 20;
     public static final int ifsym = 21;
@@ -33,32 +35,39 @@ public class Symbol {
     public static final int varsym = 26;
     public static final int eof = 27;// 井号 作为源程序结束符
 
-    // 符号码的个数
+    // 符号的个数
     public static final int symnum = 28;
 
-    /**
-     * 符号码
-     */
-    public int symtype;
+    // 符号的类型
+    private int symtype;
+    // 具体字符的值（标识符名字/关键字/算符界符）
+    private String value;
+    // 数值大小（如果这个符号是数字的话）
+    private int num;
 
-    /**
-     * 标识符名字（如果这个符号是标识符的话）
-     */
-    public String id;
+    public Symbol() {
+    }
 
-    /**
-     * 数值大小（如果这个符号是数字的话）
-     */
-    public int num;
+    public Symbol(int symtype, String value) {
+        this.symtype = symtype;
+        this.value = value;
+    }
 
-    /**
-     * 构造具有特定符号码的符号
-     *
-     * @param stype 符号码
-     */
-    Symbol(int stype) {
-        symtype = stype;
-        id = "";
-        num = 0;
+    public Symbol(int symtype, int num) {
+        this.symtype = symtype;
+        this.num = num;
+    }
+
+
+    public int getSymtype() {
+        return symtype;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public int getNum() {
+        return num;
     }
 }
