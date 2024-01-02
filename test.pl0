@@ -1,9 +1,12 @@
-PROGRAM add
+PROGRAM test
 VAR x,y;
 BEGIN
   x:=1;
   y:=2;
-  WHILE x<>5 DO y:=y-1;
+  WHILE x<>5 DO
+   BEGIN
+    y:=10; x:=10-3*(1+1)
+   END;
   IF y>0 THEN y:=y-1;
   y:=y+x
 END

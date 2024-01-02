@@ -570,8 +570,8 @@ public class Parser {
         }
 
         // P(condition)
-        if (sym.getSymtype() == Symbol.plus || sym.getSymtype() == Symbol.minus || sym.getSymtype() == Symbol.ident || sym.getSymtype() == Symbol.number
-                || sym.getSymtype() == Symbol.lparen) {
+        if (sym.getSymtype() == Symbol.ident || sym.getSymtype() == Symbol.number
+                || sym.getSymtype() == Symbol.lparen || sym.getSymtype() == Symbol.plus || sym.getSymtype() == Symbol.minus) {
             M1 = intermediater.nextStat;
             condition(trueList, falseList);
         } else {

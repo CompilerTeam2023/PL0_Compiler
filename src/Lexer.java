@@ -77,7 +77,7 @@ public class Lexer {
      */
     void getch() {
         try {
-            while (charPosition == lineLength || currentLine.isEmpty()) {
+            while (charPosition == lineLength) {
                 currentLine = in.readLine() + "\n";
                 if (currentLine.equals("null\n")) {
                     // 文件已经结束
