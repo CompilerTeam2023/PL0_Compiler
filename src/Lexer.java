@@ -99,6 +99,8 @@ public class Lexer {
      * 词法分析，获取一个词法符号，是词法分析器的重点
      */
     public void getsym() {
+        // 在Java中，Character.isWhitespace(char ch) 方法在输入的字符是空白字符时返回true。
+        // 空白字符的定义包括空格（' '）、制表符（'\t'）、换行符（'\n'）、回车符（'\r'）、换页符（'\f'）和垂直制表符（'\v'）。
         while (Character.isWhitespace(ch)) // 跳过所有空白字符
             getch();
         if (ch >= 'a' && ch <= 'z' || ch >= 'A' && ch <= 'Z') {

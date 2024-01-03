@@ -439,6 +439,9 @@ public class Parser {
         // P(ident)
         if (sym.getSymtype() == Symbol.ident) {
             result = sym.getValue();
+            // 错误处理
+            if (!table.lookup(sym.getValue()))
+                Err.handleError("Identifier [" + result + "] undefined!", lex.getCurrentLineNumber());
             nextsym();
         }
 

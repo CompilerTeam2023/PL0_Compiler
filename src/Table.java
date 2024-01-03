@@ -1,7 +1,8 @@
 import java.util.HashMap;
 
 /**
- * 　　这个类封装了PL/0编译器的符号表
+ * 　　【PL/0编译器的符号表】
+ *  由于老师给出的PL0较为简单，符号表中只存储了变量名和常量名
  */
 public class Table {
 
