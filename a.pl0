@@ -1,0 +1,4 @@
+PROGRAM add
+VAR x;
+  WHILE x<>(+5+1-3*4) DO
+    x:=-2;

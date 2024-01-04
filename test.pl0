@@ -1,12 +1,10 @@
-PROGRAM test
+PROGRAM add
 VAR x,y;
 BEGIN
-  x:=1;
-  y:=2;
-  WHILE x<>5 DO
-   BEGIN
-    y:=10; x:=10-3*(1+1)
-   END;
-  IF y>0 THEN y:=y-1;
-  y:=y+x
+  WHILE x<>(+5+1) DO
+    IF y>=2*(-3+9) THEN
+      BEGIN
+        x:=-2;
+        y:=y-4*(9-3)*4/x
+      END
 END

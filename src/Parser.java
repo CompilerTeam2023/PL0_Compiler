@@ -117,7 +117,6 @@ public class Parser {
                 return;
             }
             Err.handleError("Missing subprogram.", lex.getCurrentLineNumber());
-
         }
     }
 
@@ -345,34 +344,29 @@ public class Parser {
      */
     public String expression() {
         String code;
-        String value;
+        String value = "";
         String temp1 = "", temp2 = "", temp;
         String op;
-        String prefix;
+        String prefix = "";
 
-        // P(zhegnfu)分析[+|-]<项>
+        // P(zhegnfu)分析[+|-]
         if (sym.getSymtype() == Symbol.plus || sym.getSymtype() == Symbol.minus) {
             prefix = sym.getValue();
             nextsym();
-            if (sym.getSymtype() == Symbol.ident || sym.getSymtype() == Symbol.number || sym.getSymtype() == Symbol.lparen) {
-                value = term();
+        }
+        // P(term) 分析项
+        if (sym.getSymtype() == Symbol.ident || sym.getSymtype() == Symbol.number || sym.getSymtype() == Symbol.lparen) {
+            value = term();
+            if (!prefix.isEmpty()) {
                 temp1 = intermediater.newTempVar();
                 code = Integer.toString(intermediater.nextStat) + ":	" + temp1 + ":=" + prefix + value;
                 intermediater.emit(code);
                 intermediater.nextStat++;
-                return temp1;
-            } else {
-                Err.handleError("Error in expression: Term expected.", lex.getCurrentLineNumber());
+                value = temp1;
             }
-        }
-
-        // P(term)
-        if (sym.getSymtype() == Symbol.ident || sym.getSymtype() == Symbol.number || sym.getSymtype() == Symbol.lparen) {
-            temp1 = term();
         } else {
             Err.handleError("Error in expression: Term expected.", lex.getCurrentLineNumber());
         }
-
 
         // 分析{<加法运算符><项>}
         while (sym.getSymtype() == Symbol.plus || sym.getSymtype() == Symbol.minus) {
@@ -386,13 +380,13 @@ public class Parser {
                 Err.handleError("Error in expression: Term expected.", lex.getCurrentLineNumber());
             }
             temp = intermediater.newTempVar();
-            code = Integer.toString(intermediater.nextStat) + ":	" + temp + ":=" + temp1 + op + temp2;
+            code = Integer.toString(intermediater.nextStat) + ":	" + temp + ":=" + value + op + temp2;
             intermediater.emit(code);
             intermediater.nextStat++;
-            temp1 = temp;
+            value = temp;
         }
 
-        return temp1;
+        return value;
     }
 
     /**
@@ -458,7 +452,6 @@ public class Parser {
             if (sym.getSymtype() == Symbol.rparen) {
                 nextsym();
             } else {
-                System.out.println("error: factor-rparen");
                 Err.handleError("Error in factor: right-paren expected.", lex.getCurrentLineNumber());
             }
         } else {
@@ -520,9 +513,6 @@ public class Parser {
     public void condition(ArrayList<Integer> trueList, ArrayList<Integer> falseList) {
         String code, left = "", op = "", right = "";
 
-        trueList.add(intermediater.nextStat); // 写死，真链一定在nextStat+2
-        falseList.add(intermediater.nextStat + 1);
-
         // P(expression)
         if (sym.getSymtype() == Symbol.plus || sym.getSymtype() == Symbol.minus || sym.getSymtype() == Symbol.ident || sym.getSymtype() == Symbol.number
                 || sym.getSymtype() == Symbol.lparen) {
@@ -546,6 +536,9 @@ public class Parser {
         } else {
             Err.handleError("Error in condition: expression expected.", lex.getCurrentLineNumber());
         }
+
+        trueList.add(intermediater.nextStat); // 写死，真链一定在nextStat+2
+        falseList.add(intermediater.nextStat + 1);
 
         code = Integer.toString(intermediater.nextStat) + ":    if " + left + op + right + " goto "; // 待回填：true
         intermediater.emit(code);
