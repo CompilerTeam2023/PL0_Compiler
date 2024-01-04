@@ -293,7 +293,8 @@ public class Parser {
                 whileStatement(nextList);
                 break;
             default:
-                if (sym.getSymtype() == Symbol.semicolon || sym.getSymtype() == Symbol.endsym || sym.getSymtype() == Symbol.eof) {
+                if (sym.getSymtype() == Symbol.semicolon || sym.getSymtype() == Symbol.endsym
+                        || sym.getSymtype() == Symbol.eof) {
                     return;
                 } else {
                     Err.handleError("Error in statement.", lex.getCurrentLineNumber());
@@ -309,17 +310,21 @@ public class Parser {
         String code, left = "", op = "", right = "";
         // P(ident)
         if (sym.getSymtype() == Symbol.ident) {
+            // 错误处理：标识符未定义
             if (table.lookup(sym.getValue())) {
                 left = sym.getValue();
                 nextsym();
             } else {
-                Err.handleError("Error in assignStatement: Identifier [" + sym.getValue() + "] undefined!", lex.getCurrentLineNumber());
+                Err.handleError("Error in assignStatement: Identifier [" + sym.getValue() + "] undefined!",
+                        lex.getCurrentLineNumber());
             }
-
+            // 错误处理：常量不能修改
+            if (table.getType(left) == "Constant") {
+                Err.handleError("Constant identifier [" + left + "] can't be modified.", lex.getCurrentLineNumber());
+            }
         } else {
             Err.handleError("Error in assignStatement: Identifier expected.", lex.getCurrentLineNumber());
         }
-
         // P(assign)
         if (sym.getSymtype() == Symbol.assign) {
             op = sym.getValue();
@@ -329,7 +334,8 @@ public class Parser {
         }
 
         // P(expression)
-        if (sym.getSymtype() == Symbol.plus || sym.getSymtype() == Symbol.minus || sym.getSymtype() == Symbol.ident || sym.getSymtype() == Symbol.number
+        if (sym.getSymtype() == Symbol.plus || sym.getSymtype() == Symbol.minus || sym.getSymtype() == Symbol.ident
+                || sym.getSymtype() == Symbol.number
                 || sym.getSymtype() == Symbol.lparen) {
             right = expression();
         } else {
@@ -354,7 +360,8 @@ public class Parser {
         if (sym.getSymtype() == Symbol.plus || sym.getSymtype() == Symbol.minus) {
             prefix = sym.getValue();
             nextsym();
-            if (sym.getSymtype() == Symbol.ident || sym.getSymtype() == Symbol.number || sym.getSymtype() == Symbol.lparen) {
+            if (sym.getSymtype() == Symbol.ident || sym.getSymtype() == Symbol.number
+                    || sym.getSymtype() == Symbol.lparen) {
                 value = term();
                 temp1 = intermediater.newTempVar();
                 code = Integer.toString(intermediater.nextStat) + ":	" + temp1 + ":=" + prefix + value;
@@ -367,12 +374,12 @@ public class Parser {
         }
 
         // P(term)
-        if (sym.getSymtype() == Symbol.ident || sym.getSymtype() == Symbol.number || sym.getSymtype() == Symbol.lparen) {
+        if (sym.getSymtype() == Symbol.ident || sym.getSymtype() == Symbol.number
+                || sym.getSymtype() == Symbol.lparen) {
             temp1 = term();
         } else {
             Err.handleError("Error in expression: Term expected.", lex.getCurrentLineNumber());
         }
-
 
         // 分析{<加法运算符><项>}
         while (sym.getSymtype() == Symbol.plus || sym.getSymtype() == Symbol.minus) {
@@ -380,7 +387,8 @@ public class Parser {
             nextsym();
 
             // P(term)
-            if (sym.getSymtype() == Symbol.ident || sym.getSymtype() == Symbol.number || sym.getSymtype() == Symbol.lparen) {
+            if (sym.getSymtype() == Symbol.ident || sym.getSymtype() == Symbol.number
+                    || sym.getSymtype() == Symbol.lparen) {
                 temp2 = term();
             } else {
                 Err.handleError("Error in expression: Term expected.", lex.getCurrentLineNumber());
@@ -404,7 +412,8 @@ public class Parser {
         String code;
 
         // P(factor)
-        if (sym.getSymtype() == Symbol.ident || sym.getSymtype() == Symbol.number || sym.getSymtype() == Symbol.lparen) {
+        if (sym.getSymtype() == Symbol.ident || sym.getSymtype() == Symbol.number
+                || sym.getSymtype() == Symbol.lparen) {
             temp1 = factor();
         } else {
             Err.handleError("Error in term: Factor expected.", lex.getCurrentLineNumber());
@@ -416,7 +425,8 @@ public class Parser {
             nextsym();
 
             // P(factor)
-            if (sym.getSymtype() == Symbol.ident || sym.getSymtype() == Symbol.number || sym.getSymtype() == Symbol.lparen) {
+            if (sym.getSymtype() == Symbol.ident || sym.getSymtype() == Symbol.number
+                    || sym.getSymtype() == Symbol.lparen) {
                 temp2 = factor();
             } else {
                 Err.handleError("Error in term: Factor expected.", lex.getCurrentLineNumber());
@@ -486,7 +496,8 @@ public class Parser {
         }
 
         // P(condition)
-        if (sym.getSymtype() == Symbol.plus || sym.getSymtype() == Symbol.minus || sym.getSymtype() == Symbol.ident || sym.getSymtype() == Symbol.number
+        if (sym.getSymtype() == Symbol.plus || sym.getSymtype() == Symbol.minus || sym.getSymtype() == Symbol.ident
+                || sym.getSymtype() == Symbol.number
                 || sym.getSymtype() == Symbol.lparen) {
             condition(trueList, falseList);
             M1 = intermediater.nextStat;
@@ -524,7 +535,8 @@ public class Parser {
         falseList.add(intermediater.nextStat + 1);
 
         // P(expression)
-        if (sym.getSymtype() == Symbol.plus || sym.getSymtype() == Symbol.minus || sym.getSymtype() == Symbol.ident || sym.getSymtype() == Symbol.number
+        if (sym.getSymtype() == Symbol.plus || sym.getSymtype() == Symbol.minus || sym.getSymtype() == Symbol.ident
+                || sym.getSymtype() == Symbol.number
                 || sym.getSymtype() == Symbol.lparen) {
             left = expression();
         } else {
@@ -540,7 +552,8 @@ public class Parser {
         }
 
         // P(expression)
-        if (sym.getSymtype() == Symbol.plus || sym.getSymtype() == Symbol.minus || sym.getSymtype() == Symbol.ident || sym.getSymtype() == Symbol.number
+        if (sym.getSymtype() == Symbol.plus || sym.getSymtype() == Symbol.minus || sym.getSymtype() == Symbol.ident
+                || sym.getSymtype() == Symbol.number
                 || sym.getSymtype() == Symbol.lparen) {
             right = expression();
         } else {
@@ -574,7 +587,8 @@ public class Parser {
 
         // P(condition)
         if (sym.getSymtype() == Symbol.ident || sym.getSymtype() == Symbol.number
-                || sym.getSymtype() == Symbol.lparen || sym.getSymtype() == Symbol.plus || sym.getSymtype() == Symbol.minus) {
+                || sym.getSymtype() == Symbol.lparen || sym.getSymtype() == Symbol.plus
+                || sym.getSymtype() == Symbol.minus) {
             M1 = intermediater.nextStat;
             condition(trueList, falseList);
         } else {

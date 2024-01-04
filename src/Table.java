@@ -1,8 +1,8 @@
 import java.util.HashMap;
 
 /**
- * 　　【PL/0编译器的符号表】
- *  由于老师给出的PL0较为简单，符号表中只存储了变量名和常量名
+ * 【PL/0编译器的符号表】
+ * 由于老师给出的PL0较为简单，符号表中只存储了变量名和常量名
  */
 public class Table {
 
@@ -21,6 +21,11 @@ public class Table {
             return true;
         } else
             return false;
+    }
+
+    // getType函数:返回标识符类型
+    public String getType(String id) {
+        return tokenTable.get(id);
     }
 
     // printTable函数: 打印符号表内容

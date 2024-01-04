@@ -1,8 +1,11 @@
 PROGRAM test
+CONST z := 1;
 VAR x,y;
+
 BEGIN
   x:=1;
   y:=2;
+  z := 2;
   WHILE x<>5 DO
    BEGIN
     y:=10; x:=10-3*(1+1)

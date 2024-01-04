@@ -4,19 +4,19 @@ import java.util.Scanner;
 import java.io.BufferedReader;
 
 /**
- * @Description PL0±àÒëÆ÷ Ö÷º¯ÊıÈë¿Ú
+ * @Description PL0ç¼–è¯‘å™¨ ä¸»å‡½æ•°å…¥å£
  * @Author fjy
  * @Date 2024-01-02
  **/
 public class PL0 {
-    // Ò»¸öµäĞÍµÄ±àÒëÆ÷µÄ×é³É²¿·Ö
-    public static Lexer lex; // ´Ê·¨·ÖÎöÆ÷
-    public static Parser parser; // Óï·¨·ÖÎöÆ÷
-    public static Intermediater intermediater; // ÖĞ¼ä´úÂëÉú³É¹¤¾ß
-    public static Table table; // ·ûºÅ±í
+    // ä¸€ä¸ªå…¸å‹çš„ç¼–è¯‘å™¨çš„ç»„æˆéƒ¨åˆ†
+    public static Lexer lex; // è¯æ³•åˆ†æå™¨
+    public static Parser parser; // è¯­æ³•åˆ†æå™¨
+    public static Intermediater intermediater; // ä¸­é—´ä»£ç ç”Ÿæˆå·¥å…·
+    public static Table table; // ç¬¦å·è¡¨
 
-    public static final int id_max = 15; // ±êÊ¶·ûµÄ×î´ó³¤¶È
-    public static final int num_max = 8; // numberµÄ×î´óÎ»Êı
+    public static final int id_max = 15; // æ ‡è¯†ç¬¦çš„æœ€å¤§é•¿åº¦
+    public static final int num_max = 8; // numberçš„æœ€å¤§ä½æ•°
 
     public PL0(BufferedReader input) {
         lex = new Lexer(input);
@@ -26,13 +26,13 @@ public class PL0 {
     }
 
     public static void main(String[] args) {
-        boolean tableDisplay = false; // ÏÔÊ¾·ûºÅ±íÓë·ñ
+        boolean tableDisplay = false; // æ˜¾ç¤ºç¬¦å·è¡¨ä¸å¦
 
         System.out.println("=============================== PL0 Compiler Start ===============================");
         Scanner scanner = new Scanner(System.in);
         while (true) {
             try {
-                System.out.print("ÇëÊäÈëpl0Ô´³ÌĞòµÄÎÄ¼şÃû(»òÕßÊäÈë exit ÍË³ö³ÌĞò): ");
+                System.out.print("è¯·è¾“å…¥pl0æºç¨‹åºçš„æ–‡ä»¶å(æˆ–è€…è¾“å…¥ exit é€€å‡ºç¨‹åº): ");
                 String userInput = scanner.nextLine();
 
                 if (userInput.equalsIgnoreCase("exit")) {
@@ -42,20 +42,20 @@ public class PL0 {
                 String filePath = userInput;
                 BufferedReader input = new BufferedReader(new FileReader(filePath));
 
-                // ¹¹Ôì±àÒëÆ÷²¢³õÊ¼»¯
+                // æ„é€ ç¼–è¯‘å™¨å¹¶åˆå§‹åŒ–
                 PL0 pl0 = new PL0(input);
-                parser.parse(); // ¿ªÊ¼Óï·¨·ÖÎö¹ı³Ì£¨Á¬Í¬´Ê·¨·ÖÎö¡¢Óï·¨¼ì²é¡¢Ä¿±ê´úÂëÉú³É£©
+                parser.parse(); // å¼€å§‹è¯­æ³•åˆ†æè¿‡ç¨‹ï¼ˆè¿åŒè¯æ³•åˆ†æã€è¯­æ³•æ£€æŸ¥ã€ç›®æ ‡ä»£ç ç”Ÿæˆï¼‰
 
-                // ÊÇ·ñÊä³ö·ûºÅ±í
-                System.out.print("ÊÇ·ñÕ¹Ê¾·ûºÅ±íÄØ£¿(Y/N)");
-                // ¶ÁÈ¡ÓÃ»§ÊäÈë
+                // æ˜¯å¦è¾“å‡ºç¬¦å·è¡¨
+                System.out.print("æ˜¯å¦å±•ç¤ºç¬¦å·è¡¨å‘¢ï¼Ÿ(Y/N)");
+                // è¯»å–ç”¨æˆ·è¾“å…¥
                 String option = scanner.nextLine().trim().toUpperCase();
-                // ¼ì²éÓÃ»§ÊäÈë
+                // æ£€æŸ¥ç”¨æˆ·è¾“å…¥
                 if (option.equals("Y")) {
                     tableDisplay = true;
                 }
                 if (tableDisplay) {
-                    // Êä³ö·ûºÅ±íµÄ´úÂë
+                    // è¾“å‡ºç¬¦å·è¡¨çš„ä»£ç 
                     System.out.println("\n-----------------Printing symbol table---------------------");
                     table.printTable();
                     System.out.println("-----------------------------------------------------------");
@@ -64,7 +64,7 @@ public class PL0 {
                 }
 
                 System.out.println("\n----------------Printing intermediater code----------------");
-                intermediater.ouputCode();// Êä³öÖĞ¼ä´úÂë
+                intermediater.ouputCode();// è¾“å‡ºä¸­é—´ä»£ç 
                 System.out.println("-----------------------------------------------------------");
                 System.out.println();
 
