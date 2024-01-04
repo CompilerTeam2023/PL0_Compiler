@@ -1,11 +1,12 @@
 /**
- * 　　这个类封装了PL/0中的词法符号
- */
+ * @Description PL/0词法规则
+ **/
 public class Symbol {
 
-    // 标识符
     public static final int nul = 0;
+    // 标识符
     public static final int ident = 1;
+    // 整数
     public static final int number = 2;
     // 算符、界符
     public static final int plus = 3;
@@ -57,7 +58,6 @@ public class Symbol {
         this.symtype = symtype;
         this.num = num;
     }
-
 
     public int getSymtype() {
         return symtype;
