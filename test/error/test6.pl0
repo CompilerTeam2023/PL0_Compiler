@@ -1,0 +1,5 @@
+PROGRAM test6
+VAR x,y:=2;
+BEGIN
+    y:=y+x
+END

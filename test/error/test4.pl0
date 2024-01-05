@@ -1,0 +1,7 @@
+PROGRAM test4
+CONST x:=1;
+VAR y;
+BEGIN
+    y:=2;
+    x:=y
+END

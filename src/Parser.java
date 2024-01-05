@@ -14,8 +14,7 @@ public class Parser {
     // 当前识别到的文法符号，由nextsym()读入
     private Symbol sym;
 
-    // 位图存储一些复杂的first集合
-    private final BitSet subprogram_first;
+    // 位图存储语句的first集合
     private final BitSet statement_first;
 
     // 构造函数
@@ -23,15 +22,6 @@ public class Parser {
         lex = l;
         table = t;
         intermediater = i;
-
-        // subprogram的first集合
-        subprogram_first = new BitSet(Symbol.symnum);
-        subprogram_first.set(Symbol.constsym);
-        subprogram_first.set(Symbol.varsym);
-        subprogram_first.set(Symbol.ident);
-        subprogram_first.set(Symbol.ifsym);
-        subprogram_first.set(Symbol.whilesym);
-        subprogram_first.set(Symbol.beginsym);
 
         // statemennt的first集合
         statement_first = new BitSet(Symbol.symnum);

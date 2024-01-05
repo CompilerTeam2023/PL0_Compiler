@@ -1,0 +1,3 @@
+PROGRAM test5
+VAR x,y;
+CONST z:=1;
