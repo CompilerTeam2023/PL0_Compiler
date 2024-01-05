@@ -1,0 +1,5 @@
+PRO test0
+VAR x,y;
+BEGIN
+  WHILE x<>2 DO y:=y-4*(9-3)*4/x
+END

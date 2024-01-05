@@ -1,0 +1,8 @@
+PROGRAM test3
+VAR x,y;
+BEGIN
+  WHILE x<>(+5+1) DO
+    IF y>=2*(-3+9) THEN
+      BEGIN
+      END
+END

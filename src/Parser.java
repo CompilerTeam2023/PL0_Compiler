@@ -32,7 +32,6 @@ public class Parser {
         subprogram_first.set(Symbol.ifsym);
         subprogram_first.set(Symbol.whilesym);
         subprogram_first.set(Symbol.beginsym);
-        subprogram_first.set(Symbol.nul);
 
         // statemennt的first集合
         statement_first = new BitSet(Symbol.symnum);
@@ -58,20 +57,13 @@ public class Parser {
      * 分析<程序>
      */
     public void program() {
-        // P (programHeader)
+
         if (sym.getSymtype() == Symbol.progsym) {
-            programHeader();
+            programHeader();// P (programHeader)
+            subprogram();// P (subprogram)
         } else {
             Err.handleError("Expected 'PROGRAM' keyword.", lex.getCurrentLineNumber());
         }
-
-        // P (subprogram)
-        if (subprogram_first.get(sym.getSymtype())) {
-            subprogram();
-        } else {
-            Err.handleError("Exist subprogram error.", lex.getCurrentLineNumber());
-        }
-
     }
 
     /**
@@ -110,14 +102,12 @@ public class Parser {
             varDeclaration();
         }
         // P (statement)
-        if (statement_first.get(sym.getSymtype())) {
+        if (statement_first.get(sym.getSymtype()))
             statement(s_nextList);
-        } else {
-            if (sym.getSymtype() == Symbol.eof) {
-                return;
-            }
-            Err.handleError("Missing subprogram.", lex.getCurrentLineNumber());
-        }
+        else if (sym.getSymtype() == Symbol.eof)
+            return;
+        else
+            Err.handleError("Exist subprogram error.", lex.getCurrentLineNumber());
     }
 
     /**
@@ -132,24 +122,11 @@ public class Parser {
         }
 
         // P (constDefinition)
-        if (sym.getSymtype() == Symbol.ident) {
-            if (!table.addItem(sym.getValue(), "Constant"))
-                Err.handleError("Constant identifier repeat.", lex.getCurrentLineNumber());
-            constDefinition();
-        } else {
-            Err.handleError("Expected identifier after CONST.", lex.getCurrentLineNumber());
-        }
+        constDefinition();
 
         while (sym.getSymtype() == Symbol.comma) {
             nextsym();
-            // P (constDefinition)
-            if (sym.getSymtype() == Symbol.ident) {
-                if (!table.addItem(sym.getValue(), "Constant"))
-                    Err.handleError("Constant identifier repeat.", lex.getCurrentLineNumber());
-                constDefinition();
-            } else {
-                Err.handleError("Expected identifier after CONST.", lex.getCurrentLineNumber());
-            }
+            constDefinition();// P (constDefinition)
         }
 
         // P (semicolon)
@@ -169,9 +146,11 @@ public class Parser {
         // P (identifier)
         if (sym.getSymtype() == Symbol.ident) {
             id = sym.getValue();
+            if (!table.addItem(id, "Constant"))
+                Err.handleError("Constant identifier repeat.", lex.getCurrentLineNumber());
             nextsym();
         } else {
-            Err.handleError("Expected identifier first in the constant definition.", lex.getCurrentLineNumber());
+            Err.handleError("Expected identifier after CONST.", lex.getCurrentLineNumber());
         }
 
         // P (assign)
@@ -249,20 +228,11 @@ public class Parser {
         }
 
         // P(statement)
-        if (statement_first.get(sym.getSymtype())) {
-            statement(s_nextList);
-        } else {
-            Err.handleError("Error in compoundStatement: statement expected.", lex.getCurrentLineNumber());
-        }
+        statement(s_nextList);
 
         while (sym.getSymtype() == Symbol.semicolon) {
             nextsym();
-            // P (statement)
-            if (statement_first.get(sym.getSymtype())) {
-                statement(s_nextList);
-            } else {
-                Err.handleError("Error in compoundStatement: statement expected.", lex.getCurrentLineNumber());
-            }
+            statement(s_nextList);// P (statement)
         }
 
         // P (END)
@@ -307,9 +277,9 @@ public class Parser {
      */
     public void assignStatement() {
         String code, left = "", op = "", right = "";
-        // P(ident)
+        // P (identifier)
         if (sym.getSymtype() == Symbol.ident) {
-            // 错误处理：标识符未定义
+            // 错误处理1：标识符未定义
             if (table.lookup(sym.getValue())) {
                 left = sym.getValue();
                 nextsym();
@@ -317,13 +287,14 @@ public class Parser {
                 Err.handleError("Error in assignStatement: Identifier [" + sym.getValue() + "] undefined!",
                         lex.getCurrentLineNumber());
             }
-            // 错误处理：常量不能修改
+            // 错误处理2：常量不能修改
             if (table.getType(left) == "Constant") {
                 Err.handleError("Constant identifier [" + left + "] can't be modified.", lex.getCurrentLineNumber());
             }
         } else {
             Err.handleError("Error in assignStatement: Identifier expected.", lex.getCurrentLineNumber());
         }
+
         // P(assign)
         if (sym.getSymtype() == Symbol.assign) {
             op = sym.getValue();
@@ -333,13 +304,8 @@ public class Parser {
         }
 
         // P(expression)
-        if (sym.getSymtype() == Symbol.plus || sym.getSymtype() == Symbol.minus || sym.getSymtype() == Symbol.ident
-                || sym.getSymtype() == Symbol.number
-                || sym.getSymtype() == Symbol.lparen) {
-            right = expression();
-        } else {
-            Err.handleError("Error in assignStatement: Expression expected.", lex.getCurrentLineNumber());
-        }
+        right = expression();
+
         code = Integer.toString(intermediater.nextStat) + ":	" + left + op + right;
         intermediater.emit(code);
         intermediater.nextStat++;
@@ -360,19 +326,18 @@ public class Parser {
             prefix = sym.getValue();
             nextsym();
         }
+
         // P(term) 分析项
         if (sym.getSymtype() == Symbol.ident || sym.getSymtype() == Symbol.number
                 || sym.getSymtype() == Symbol.lparen) {
             value = term();
-            if (!prefix.isEmpty()) {
-                temp1 = intermediater.newTempVar();
-                code = Integer.toString(intermediater.nextStat) + ":	" + temp1 + ":=" + prefix + value;
-                intermediater.emit(code);
-                intermediater.nextStat++;
-                value = temp1;
-            }
-        } else {
-            Err.handleError("Error in expression: Term expected.", lex.getCurrentLineNumber());
+        }
+        if (!prefix.isEmpty()) {
+            temp1 = intermediater.newTempVar();
+            code = Integer.toString(intermediater.nextStat) + ":	" + temp1 + ":=" + prefix + value;
+            intermediater.emit(code);
+            intermediater.nextStat++;
+            value = temp1;
         }
 
         // 分析{<加法运算符><项>}
@@ -381,12 +346,8 @@ public class Parser {
             nextsym();
 
             // P(term)
-            if (sym.getSymtype() == Symbol.ident || sym.getSymtype() == Symbol.number
-                    || sym.getSymtype() == Symbol.lparen) {
-                temp2 = term();
-            } else {
-                Err.handleError("Error in expression: Term expected.", lex.getCurrentLineNumber());
-            }
+            temp2 = term();
+
             temp = intermediater.newTempVar();
             code = Integer.toString(intermediater.nextStat) + ":	" + temp + ":=" + value + op + temp2;
             intermediater.emit(code);
@@ -419,12 +380,7 @@ public class Parser {
             nextsym();
 
             // P(factor)
-            if (sym.getSymtype() == Symbol.ident || sym.getSymtype() == Symbol.number
-                    || sym.getSymtype() == Symbol.lparen) {
-                temp2 = factor();
-            } else {
-                Err.handleError("Error in term: Factor expected.", lex.getCurrentLineNumber());
-            }
+            temp2 = factor();
 
             temp = intermediater.newTempVar();
             code = Integer.toString(intermediater.nextStat) + ":	" + temp + ":=" + temp1 + op + temp2;
@@ -489,15 +445,9 @@ public class Parser {
         }
 
         // P(condition)
-        if (sym.getSymtype() == Symbol.plus || sym.getSymtype() == Symbol.minus || sym.getSymtype() == Symbol.ident
-                || sym.getSymtype() == Symbol.number
-                || sym.getSymtype() == Symbol.lparen) {
-            condition(trueList, falseList);
-            M1 = intermediater.nextStat;
-            intermediater.BackPatch(trueList, M1); // 回填trueList地址:此时nextStat一定为M1.quard
-        } else {
-            Err.handleError("Error in ifStatement: condition expected.", lex.getCurrentLineNumber());
-        }
+        condition(trueList, falseList);
+        M1 = intermediater.nextStat;
+        intermediater.BackPatch(trueList, M1); // 回填trueList地址:此时nextStat一定为M1.quard
 
         // P(then)
         if (sym.getSymtype() == Symbol.thensym) {
@@ -507,13 +457,9 @@ public class Parser {
         }
 
         // P(statement)
-        if (statement_first.get(sym.getSymtype())) {
-            statement(s_nextList);
-            M2 = intermediater.nextStat;
-            intermediater.BackPatch(falseList, M2); // 回填E.falseList地址:此时nextStat一定为M2.quard
-        } else {
-            Err.handleError("Error in ifStatement: statement expected.", lex.getCurrentLineNumber());
-        }
+        statement(s_nextList);
+        M2 = intermediater.nextStat;
+        intermediater.BackPatch(falseList, M2); // 回填E.falseList地址:此时nextStat一定为M2.quard
 
         nextList = intermediater.merge(falseList, s_nextList); // 合并链
     }
@@ -542,13 +488,7 @@ public class Parser {
         }
 
         // P(expression)
-        if (sym.getSymtype() == Symbol.plus || sym.getSymtype() == Symbol.minus || sym.getSymtype() == Symbol.ident
-                || sym.getSymtype() == Symbol.number
-                || sym.getSymtype() == Symbol.lparen) {
-            right = expression();
-        } else {
-            Err.handleError("Error in condition: expression expected.", lex.getCurrentLineNumber());
-        }
+        right = expression();
 
         trueList.add(intermediater.nextStat); // 写死，真链一定在nextStat+2
         falseList.add(intermediater.nextStat + 1);
@@ -579,14 +519,8 @@ public class Parser {
         }
 
         // P(condition)
-        if (sym.getSymtype() == Symbol.ident || sym.getSymtype() == Symbol.number
-                || sym.getSymtype() == Symbol.lparen || sym.getSymtype() == Symbol.plus
-                || sym.getSymtype() == Symbol.minus) {
-            M1 = intermediater.nextStat;
-            condition(trueList, falseList);
-        } else {
-            Err.handleError("Error in whileStatement: condition expected.", lex.getCurrentLineNumber());
-        }
+        M1 = intermediater.nextStat;
+        condition(trueList, falseList);
 
         // P(do)
         if (sym.getSymtype() == Symbol.dosym) {
@@ -596,12 +530,8 @@ public class Parser {
         }
 
         // P(statement)
-        if (statement_first.get(sym.getSymtype())) {
-            M2 = intermediater.nextStat;
-            statement(s_nextList);
-        } else {
-            Err.handleError("Error in whileStatement: statement expected.", lex.getCurrentLineNumber());
-        }
+        M2 = intermediater.nextStat;
+        statement(s_nextList);
 
         M3 = intermediater.nextStat + 1;
         intermediater.BackPatch(nextList, M1);

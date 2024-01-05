@@ -1,0 +1,10 @@
+PROGRAM test1
+VAR x,y;
+BEGIN
+  WHILE x<>(+5+1) DO
+    IF y>=2*(-3+9) THEN
+      BEGIN
+        x:=-2;
+        y:=y-4*(9-3)*4/x
+      END
+END
