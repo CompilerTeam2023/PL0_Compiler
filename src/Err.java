@@ -4,10 +4,8 @@
  * @Date 2024-01-02
  **/
 public class Err {
-
     /**
      * 报错函数
-     *
      * @param errorMsg 错误信息
      * @param line     所在行数
      */
